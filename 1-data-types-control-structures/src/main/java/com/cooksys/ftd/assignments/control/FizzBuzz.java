@@ -36,28 +36,28 @@ public class FizzBuzz {
         }
     }
 
-    /**
-     * Generates a divisibility message for a given number. Returns null if the given number is not divisible by 3 or 5.
-     * Message formatting examples:
-     * 1 -> null // not divisible by 3 or 5
-     * 3 -> "3: Fizz" // divisible by only 3
-     * 5 -> "5: Buzz" // divisible by only 5
-     * 15 -> "15: FizzBuzz" // divisible by both three and five
-     *
-     * @param n the number to generate a message for
-     * @return a message according to the format above, or null if n is not divisible by either 3 or 5
-     */
-    public static String message(int n) {
-    	if (n%15 == 0) {
-    		return n + ": FizzBuzz";
-    	} else if (n%5 == 0) {
-    		return n + ": Buzz";
-    	} else if (n%3 == 0) {
-    		return n +": Fizz";
-    	} else {
-    		return null;
-    	}
-    }
+	/**
+	 * Generates a divisibility message for a given number. Returns null if the given number is not divisible by 3 or 5.
+	 * Message formatting examples:
+	 * 1 -> null // not divisible by 3 or 5
+	 * 3 -> "3: Fizz" // divisible by only 3
+	 * 5 -> "5: Buzz" // divisible by only 5
+	 * 15 -> "15: FizzBuzz" // divisible by both three and five
+	 *
+	 * @param n the number to generate a message for
+	 * @return a message according to the format above, or null if n is not divisible by either 3 or 5
+	 */
+	public static String message(int n) {
+		if (n%15 == 0) {
+			return n + ": FizzBuzz";
+		} else if (n%5 == 0) {
+			return n + ": Buzz";
+		} else if (n%3 == 0) {
+			return n +": Fizz";
+		} else {
+			return null;
+		}
+	}
 
     /**
      * Generates an array of messages to print for a given range of numbers.

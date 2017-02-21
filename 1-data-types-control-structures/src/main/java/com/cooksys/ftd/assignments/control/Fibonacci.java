@@ -25,8 +25,9 @@ public class Fibonacci {
      * @return the calculated element
      * @throws IllegalArgumentException if the given index is less than zero
      */
-    public static void atIndex(int index) throws IllegalArgumentException {
-    	
+    public static int atIndex(int index) throws IllegalArgumentException {
+    	int[] mehIntArray = fibonacci(index);
+    	return mehIntArray[index];
     }
  
     /**
@@ -43,7 +44,7 @@ public class Fibonacci {
     	int[] mehIntArray = fibonacci(end);
     	ArrayList<Integer> ughList = new ArrayList<Integer>();
     	for (int i = 0; i < mehIntArray.length; i++) {
-    		if (i >= start && i <= end) {
+    		if (mehIntArray[i] >= start && mehIntArray[i] <= end) {
     			ughList.add(mehIntArray[i]);
     		}
     	}
@@ -97,6 +98,6 @@ public class Fibonacci {
     }
     
     public static void main(String[] args) {
-    	int[] hey = slice(21, 34);
+    	int[] hey = slice(0, 5);
     }
 }
