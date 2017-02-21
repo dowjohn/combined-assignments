@@ -1,5 +1,8 @@
 package com.cooksys.ftd.assignments.control;
 
+import java.awt.List;
+import java.util.ArrayList;
+
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
@@ -25,8 +28,12 @@ public class FizzBuzz {
      * @return `true` if a is evenly divisible by b, `false` otherwise
      * @throws IllegalArgumentException if b is zero
      */
-    public static boolean divides(int a, int b) throws IllegalArgumentException {
-        throw new NotImplementedException();
+    public static boolean divides(int a, int b) throws IllegalArgumentException, ArithmeticException {
+    	if (a%b == 0) {
+        	return true;
+        } else {
+        	return false;
+        }
     }
 
     /**
@@ -41,7 +48,15 @@ public class FizzBuzz {
      * @return a message according to the format above, or null if n is not divisible by either 3 or 5
      */
     public static String message(int n) {
-        throw new NotImplementedException();
+    	if (n%15 == 0) {
+    		return n + ": FizzBuzz";
+    	} else if (n%5 == 0) {
+    		return n + ": Buzz";
+    	} else if (n%3 == 0) {
+    		return n +": Fizz";
+    	} else {
+    		return null;
+    	}
     }
 
     /**
@@ -54,8 +69,32 @@ public class FizzBuzz {
      * @return an array of divisibility messages
      * @throws IllegalArgumentException if the given end is less than the given start
      */
-    public static String[] messages(int start, int end) throws IllegalArgumentException {
-        throw new NotImplementedException();
+    public static String[] messages(int start, int end) {
+    	if (start > end) {
+    		throw new IllegalArgumentException();
+    	} else if (start == end){
+    		return new String[0];
+    	}
+    	String[] allMessages = new String[end - start];
+    	String[] cleanedMessages;
+    	int countLength = 0;
+    	int startNum = 0;
+        for (int i = start; i < end; i++) {
+    		allMessages[startNum] = message(i);
+    		if (!(message(i) == null)) {
+    			countLength ++;
+    		}
+    		startNum ++;
+        }
+        cleanedMessages = new String[countLength];
+        int counter = 0;
+        for (int i = 0; i < allMessages.length; i++) {
+        	if (allMessages[i] != null) {
+        		cleanedMessages[counter] = allMessages[i];
+        		counter ++;
+        	}
+        }
+        return cleanedMessages;
     }
 
     /**
@@ -63,7 +102,9 @@ public class FizzBuzz {
      * the relevant messages to sysout
      */
     public static void main(String[] args) {
-        throw new NotImplementedException();
+    	for(String message : messages(3, 7)) {
+    		System.out.println(message);
+    	}
     }
 
 }

@@ -25,7 +25,7 @@ public class FizzBuzzTests {
         assertFalse(FizzBuzz.divides(4, 5));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ArithmeticException.class)
     public void dividesExceptionTest() {
         FizzBuzz.divides(0, 0);
     }

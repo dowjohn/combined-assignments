@@ -1,5 +1,7 @@
 package com.cooksys.ftd.assignments.control;
 
+import java.util.ArrayList;
+
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
@@ -23,10 +25,10 @@ public class Fibonacci {
      * @return the calculated element
      * @throws IllegalArgumentException if the given index is less than zero
      */
-    public static int atIndex(int i) throws IllegalArgumentException {
-        throw new NotImplementedException();
+    public static void atIndex(int index) throws IllegalArgumentException {
+    	
     }
-
+ 
     /**
      * Calculates a slice of the fibonacci sequence, starting from a given start index (inclusive) and
      * ending at a given end index (exclusive).
@@ -38,7 +40,21 @@ public class Fibonacci {
      *                                  given end is less than the given start
      */
     public static int[] slice(int start, int end) throws IllegalArgumentException {
-        throw new NotImplementedException();
+    	int[] mehIntArray = fibonacci(end);
+    	ArrayList<Integer> ughList = new ArrayList<Integer>();
+    	for (int i = 0; i < mehIntArray.length; i++) {
+    		if (i >= start && i <= end) {
+    			ughList.add(mehIntArray[i]);
+    		}
+    	}
+    	int[] outIntArray = new int[ughList.size()];
+    	int counter = 0;
+    	for (Integer fibNum : ughList) {
+    		outIntArray[counter] = fibNum;
+    		counter ++;
+    		System.out.println(fibNum);
+    	}
+    	return outIntArray;
     }
 
     /**
@@ -49,6 +65,38 @@ public class Fibonacci {
      * @throws IllegalArgumentException if the given count is negative
      */
     public static int[] fibonacci(int count) throws IllegalArgumentException {
-        throw new NotImplementedException();
+		int num1 = 1;
+    	int num2 = 1;
+    	int num3 = 0;
+    	ArrayList<Integer> outlist = new ArrayList<Integer>();
+    	if (count == 1) {
+    		return new int[]{1};
+    	} else {
+	    	for (int i = 0; i <= count; i++) {
+	    		if (i == 0 || i == 1) {
+	    			outlist.add(1);
+	    		} else {
+		    		num3 = num1 + num2;
+		       		num1 = num2;
+		    		num2 = num3;
+		    		outlist.add(num3);
+		    		if (num3 >= count) {
+		    			break;
+		    		}
+	    		}
+	    	}
+	    	
+	    	int[] outIntArray = new int[outlist.size()];
+	    	int counter = 0;
+	    	for (Integer fibNum : outlist) {
+	    		outIntArray[counter] = fibNum;
+	    		counter ++;
+	    	}
+	    	return outIntArray;
+    	}
+    }
+    
+    public static void main(String[] args) {
+    	int[] hey = slice(21, 34);
     }
 }
