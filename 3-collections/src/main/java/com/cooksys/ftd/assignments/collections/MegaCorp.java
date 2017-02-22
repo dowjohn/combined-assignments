@@ -10,9 +10,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.util.*;
 
 public class MegaCorp implements Hierarchy<Capitalist, FatCat> {
-	// hierarchy is custom Collection
 	private HashSet<Capitalist> mIsInHierarchy = new HashSet<>();
-//	private HashSet<Capitalist> mAllCapitalistSet = new HashSet<>();
 	private HashMap<FatCat, Set<Capitalist>> mHierarchy = new HashMap<>();
 	
     /**
@@ -46,29 +44,6 @@ public class MegaCorp implements Hierarchy<Capitalist, FatCat> {
     		mIsInHierarchy.add(capitalist);
     		isAdded = true;
     	}
-//    	if (capitalist == null) {
-//    		isAdded = false;
-//    	} else if (!(capitalist.hasParent()) && capitalist instanceof WageSlave || mIsInHierarchy.contains(capitalist)) {
-//    		isAdded =  false;
-//    	} else if (capitalist.hasParent()) {
-//     		FatCat parent = capitalist.getParent();
-//     		HashSet<Capitalist> lHashSet = new HashSet<>();
-//     		lHashSet.add(capitalist);
-//     		if (capitalist.hasParent() && mIsInHierarchy.contains(parent)) {
-//     			mHierarchy.get(parent).add(capitalist);
-//     		} else {
-//     			mHierarchy.put(parent, lHashSet);
-//     		}
-//     		if (!(mIsInHierarchy.contains(parent))) {
-//     			mIsInHierarchy.add(parent);
-//     		}
-//     		mIsInHierarchy.add(capitalist);
-//     		isAdded =  true;
-//     	} else if (capitalist.hasParent() != true && capitalist instanceof FatCat) {
-//     		mIsInHierarchy.add(capitalist);
-//     		mHierarchy.put((FatCat) capitalist, new HashSet<>());
-//     		isAdded =  true;
-//     	}
     	return isAdded;
     }
 
@@ -168,13 +143,6 @@ public class MegaCorp implements Hierarchy<Capitalist, FatCat> {
     		lParentList = nextCapitalistPig(capitalist);
     	}
     	return lParentList;
-//		from tests ...
-//  	FatCat parent = capitalist.getParent();
-//      List<FatCat> expected = new LinkedList<>();
-//      while (parent != null) {
-//          expected.add(parent);
-//          parent = parent.getParent();
-//      }
     }
     
     private static LinkedList<FatCat> nextCapitalistPig(Capitalist pig) {
