@@ -3,12 +3,18 @@ package com.cooksys.ftd.assignments.collections;
 import com.cooksys.ftd.assignments.collections.hierarchy.Hierarchy;
 import com.cooksys.ftd.assignments.collections.model.Capitalist;
 import com.cooksys.ftd.assignments.collections.model.FatCat;
+import com.cooksys.ftd.assignments.collections.model.WageSlave;
+
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.*;
 
 public class MegaCorp implements Hierarchy<Capitalist, FatCat> {
-
+	// hierarchy is custom Collection
+	private HashSet<Capitalist> mIsInHierarchy = new HashSet<>();
+//	private HashSet<Capitalist> mAllCapitalistSet = new HashSet<>();
+	private HashMap<FatCat, Set<Capitalist>> mHierarchy = new HashMap<>();
+	
     /**
      * Adds a given element to the hierarchy.
      * <p>
@@ -29,7 +35,41 @@ public class MegaCorp implements Hierarchy<Capitalist, FatCat> {
      */
     @Override
     public boolean add(Capitalist capitalist) {
-        throw new NotImplementedException();
+    	boolean isAdded = false;
+    	if (capitalist == null) {
+    		isAdded = false;
+    	} else if (capitalist.hasParent()) {
+    		mIsInHierarchy.add(capitalist);
+    		mIsInHierarchy.add(capitalist.getParent()); 
+    		isAdded = true;
+    	} else if (!(capitalist.hasParent()) && capitalist instanceof FatCat) {
+    		mIsInHierarchy.add(capitalist);
+    		isAdded = true;
+    	}
+//    	if (capitalist == null) {
+//    		isAdded = false;
+//    	} else if (!(capitalist.hasParent()) && capitalist instanceof WageSlave || mIsInHierarchy.contains(capitalist)) {
+//    		isAdded =  false;
+//    	} else if (capitalist.hasParent()) {
+//     		FatCat parent = capitalist.getParent();
+//     		HashSet<Capitalist> lHashSet = new HashSet<>();
+//     		lHashSet.add(capitalist);
+//     		if (capitalist.hasParent() && mIsInHierarchy.contains(parent)) {
+//     			mHierarchy.get(parent).add(capitalist);
+//     		} else {
+//     			mHierarchy.put(parent, lHashSet);
+//     		}
+//     		if (!(mIsInHierarchy.contains(parent))) {
+//     			mIsInHierarchy.add(parent);
+//     		}
+//     		mIsInHierarchy.add(capitalist);
+//     		isAdded =  true;
+//     	} else if (capitalist.hasParent() != true && capitalist instanceof FatCat) {
+//     		mIsInHierarchy.add(capitalist);
+//     		mHierarchy.put((FatCat) capitalist, new HashSet<>());
+//     		isAdded =  true;
+//     	}
+    	return isAdded;
     }
 
     /**
@@ -38,7 +78,13 @@ public class MegaCorp implements Hierarchy<Capitalist, FatCat> {
      */
     @Override
     public boolean has(Capitalist capitalist) {
-        throw new NotImplementedException();
+    	boolean out = false;
+    	if (mIsInHierarchy.isEmpty()) {
+    		 
+    	} else if (mIsInHierarchy.contains(capitalist)) {
+    		out = true;
+    	}
+    	return out;
     }
 
     /**
@@ -47,7 +93,7 @@ public class MegaCorp implements Hierarchy<Capitalist, FatCat> {
      */
     @Override
     public Set<Capitalist> getElements() {
-        throw new NotImplementedException();
+        return mIsInHierarchy;
     }
 
     /**
@@ -56,7 +102,13 @@ public class MegaCorp implements Hierarchy<Capitalist, FatCat> {
      */
     @Override
     public Set<FatCat> getParents() {
-        throw new NotImplementedException();
+    	Set<FatCat> parents = new HashSet<>();
+        for (Capitalist piggy : mIsInHierarchy) {
+        	if (piggy.hasParent()) {
+        		parents.add(piggy.getParent());
+        	}
+        }
+        return parents;
     }
 
     /**
@@ -67,7 +119,13 @@ public class MegaCorp implements Hierarchy<Capitalist, FatCat> {
      */
     @Override
     public Set<Capitalist> getChildren(FatCat fatCat) {
-        throw new NotImplementedException();
+    	Set<Capitalist> cattySet = new HashSet<>();
+    	for (Capitalist capitalist : mIsInHierarchy) {
+    		if (capitalist.getParent().equals(fatCat)) {
+    			cattySet.add(capitalist);
+    		}
+    	}
+        return cattySet;
     }
 
     /**
@@ -77,7 +135,22 @@ public class MegaCorp implements Hierarchy<Capitalist, FatCat> {
      */
     @Override
     public Map<FatCat, Set<Capitalist>> getHierarchy() {
-        throw new NotImplementedException();
+    	Map<FatCat, Set<Capitalist>> lMappy = new HashMap<>();
+    	if (mIsInHierarchy.isEmpty()) {
+    		lMappy.isEmpty();
+    	} else {
+	    	for (Capitalist cat : mIsInHierarchy) {
+	    		if (cat instanceof FatCat) {
+	    			lMappy.put((FatCat) cat, new HashSet<Capitalist>());
+	    		}
+	    	}
+	    	for (Capitalist cat : mIsInHierarchy) {
+	    		if (cat.hasParent()) {
+	    			lMappy.get(cat.getParent()).add(cat);
+	    		}
+	    	}
+    	}
+        return lMappy;
     }
 
     /**
@@ -88,6 +161,28 @@ public class MegaCorp implements Hierarchy<Capitalist, FatCat> {
      */
     @Override
     public List<FatCat> getParentChain(Capitalist capitalist) {
-        throw new NotImplementedException();
+    	LinkedList<FatCat> lParentList = new LinkedList<>();
+    	if (!(mIsInHierarchy.contains(capitalist))) {
+    		// do nothing
+    	} else {
+    		lParentList = nextCapitalistPig(capitalist);
+    	}
+    	return lParentList;
+//		from tests ...
+//  	FatCat parent = capitalist.getParent();
+//      List<FatCat> expected = new LinkedList<>();
+//      while (parent != null) {
+//          expected.add(parent);
+//          parent = parent.getParent();
+//      }
+    }
+    
+    private static LinkedList<FatCat> nextCapitalistPig(Capitalist pig) {
+    	LinkedList<FatCat> piggies = new LinkedList<>();
+    	if (pig.hasParent()) {
+    		piggies.add(pig.getParent());
+    		nextCapitalistPig(pig.getParent());
+    	}
+    	return piggies;
     }
 }
