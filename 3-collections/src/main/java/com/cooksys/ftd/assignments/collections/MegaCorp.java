@@ -10,10 +10,13 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.util.*;
 
 public class MegaCorp implements Hierarchy<Capitalist, FatCat> {
-	private HashSet<Capitalist> mIsInHierarchy = new HashSet<>();
-	private HashMap<FatCat, Set<Capitalist>> mHierarchy = new HashMap<>();
-	
-    /**
+	private Map<FatCat, Set<Capitalist>> baseMap;
+
+	public MegaCorp() {
+		this.baseMap = new HashMap<>();
+	}
+
+	/**
      * Adds a given element to the hierarchy.
      * <p>
      * If the given element is already present in the hierarchy,
@@ -34,123 +37,130 @@ public class MegaCorp implements Hierarchy<Capitalist, FatCat> {
     @Override
     public boolean add(Capitalist capitalist) {
     	boolean isAdded = false;
-    	if (capitalist == null) {
+    	if (capitalist == null || this.has(capitalist) || capitalist.getParent() == null && capitalist instanceof WageSlave) {
     		isAdded = false;
-    	} else if (capitalist.hasParent()) {
-    		mIsInHierarchy.add(capitalist);
-    		mIsInHierarchy.add(capitalist.getParent()); 
-    		isAdded = true;
-    	} else if (!(capitalist.hasParent()) && capitalist instanceof FatCat) {
-    		mIsInHierarchy.add(capitalist);
-    		isAdded = true;
+    	} else {
+    		this.addemAll(capitalist);
     	}
+//    	if (capitalist == null || capitalist.getParent() == null && capitalist instanceof WageSlave) {
+//    		isAdded = false;
+//    	} else if (!(this.has(capitalist))) {
+//    		if (!(this.has(capitalist.getParent())) && capitalist.getParent() != null) {
+//    			baseMap.put(capitalist.getParent(), new HashSet<Capitalist>());
+//    			baseMap.get(capitalist.getParent()).add(capitalist);
+//    			isAdded = true;
+//    		} else if (capitalist instanceof FatCat && capitalist.getParent() == null) {
+//    			// need to add condition for childless fatcat
+//    			baseMap.put((FatCat) capitalist, new HashSet<Capitalist>()); 
+//    			isAdded = true;
+//    		} else if (capitalist instanceof WageSlave && capitalist.hasParent()) {
+//    			baseMap.get(capitalist.getParent()).add(capitalist);
+//    			isAdded = true;
+//    		}
+//    	}
+    	
     	return isAdded;
     }
-
-    /**
-     * @param capitalist the element to search for
-     * @return true if the element has been added to the hierarchy, false otherwise
-     */
-    @Override
-    public boolean has(Capitalist capitalist) {
-    	boolean out = false;
-    	if (mIsInHierarchy.isEmpty()) {
-    		 
-    	} else if (mIsInHierarchy.contains(capitalist)) {
-    		out = true;
-    	}
-    	return out;
-    }
-
-    /**
-     * @return all elements in the hierarchy,
-     * or an empty set if no elements have been added to the hierarchy
-     */
-    @Override
-    public Set<Capitalist> getElements() {
-        return mIsInHierarchy;
-    }
-
-    /**
-     * @return all parent elements in the hierarchy,
-     * or an empty set if no parents have been added to the hierarchy
-     */
-    @Override
-    public Set<FatCat> getParents() {
-    	Set<FatCat> parents = new HashSet<>();
-        for (Capitalist piggy : mIsInHierarchy) {
-        	if (piggy.hasParent()) {
-        		parents.add(piggy.getParent());
-        	}
-        }
-        return parents;
-    }
-
-    /**
-     * @param fatCat the parent whose children need to be returned
-     * @return all elements in the hierarchy that have the given parent as a direct parent,
-     * or an empty set if the parent is not present in the hierarchy or if there are no children
-     * for the given parent
-     */
-    @Override
-    public Set<Capitalist> getChildren(FatCat fatCat) {
-    	Set<Capitalist> cattySet = new HashSet<>();
-    	for (Capitalist capitalist : mIsInHierarchy) {
-    		if (capitalist.getParent().equals(fatCat)) {
-    			cattySet.add(capitalist);
-    		}
-    	}
-        return cattySet;
-    }
-
-    /**
-     * @return a map in which the keys represent the parent elements in the hierarchy,
-     * and the each value is a set of the direct children of the associate parent, or an
-     * empty map if the hierarchy is empty.
-     */
-    @Override
-    public Map<FatCat, Set<Capitalist>> getHierarchy() {
-    	Map<FatCat, Set<Capitalist>> lMappy = new HashMap<>();
-    	if (mIsInHierarchy.isEmpty()) {
-    		lMappy.isEmpty();
-    	} else {
-	    	for (Capitalist cat : mIsInHierarchy) {
-	    		if (cat instanceof FatCat) {
-	    			lMappy.put((FatCat) cat, new HashSet<Capitalist>());
-	    		}
-	    	}
-	    	for (Capitalist cat : mIsInHierarchy) {
-	    		if (cat.hasParent()) {
-	    			lMappy.get(cat.getParent()).add(cat);
-	    		}
-	    	}
-    	}
-        return lMappy;
-    }
-
-    /**
-     * @param capitalist
-     * @return the parent chain of the given element, starting with its direct parent,
-     * then its parent's parent, etc, or an empty list if the given element has no parent
-     * or if its parent is not in the hierarchy
-     */
-    @Override
-    public List<FatCat> getParentChain(Capitalist capitalist) {
-    	LinkedList<FatCat> lParentList = new LinkedList<>();
-    	if (!(mIsInHierarchy.contains(capitalist))) {
-    		// do nothing
-    	} else {
-    		lParentList = nextCapitalistPig(capitalist);
-    	}
-    	return lParentList;
-    }
     
-    private static LinkedList<FatCat> nextCapitalistPig(Capitalist pig) {
-    	LinkedList<FatCat> piggies = new LinkedList<>();
-    	if (pig.hasParent()) {
-    		piggies.add(pig.getParent());
-    		nextCapitalistPig(pig.getParent());
+    private void addemAll(Capitalist cappy) {
+    	FatCat lFatty = (FatCat) cappy;
+    	if (!(cappy.hasParent())) {
+    		baseMap.put(lFatty, new HashSet<>());
+    	} else {
+    		this.addemAll(cappy.getParent());	
     	}
-    	return piggies;
     }
+
+	/**
+	 * @param capitalist
+	 *            the element to search for
+	 * @return true if the element has been added to the hierarchy, false
+	 *         otherwise
+	 */
+	@Override
+	public boolean has(Capitalist capitalist) {
+		boolean out = false;
+		if (this.getElements().contains(capitalist)) {
+			out = true;
+		}
+		return out;
+	}
+
+	/**
+	 * @return all elements in the hierarchy, or an empty set if no elements
+	 *         have been added to the hierarchy
+	 */
+	@Override
+	public Set<Capitalist> getElements() {
+		Set<Capitalist> capitalists = new HashSet<>();
+		Collection<Set<Capitalist>> cSet = baseMap.values();
+		for (Set<Capitalist> capitalist : cSet) {
+			capitalists.addAll(capitalist);
+		}
+		capitalists.addAll(this.getParents());
+		return capitalists;
+	}
+
+	/**
+	 * @return all parent elements in the hierarchy, or an empty set if no
+	 *         parents have been added to the hierarchy
+	 */
+	@Override
+	public Set<FatCat> getParents() {
+		return baseMap.keySet();
+	}
+
+	/**
+	 * @param fatCat
+	 *            the parent whose children need to be returned
+	 * @return all elements in the hierarchy that have the given parent as a
+	 *         direct parent, or an empty set if the parent is not present in
+	 *         the hierarchy or if there are no children for the given parent
+	 */
+	@Override
+	public Set<Capitalist> getChildren(FatCat fatCat) {
+		return baseMap.get(fatCat);
+	}
+
+	/**
+	 * @return a map in which the keys represent the parent elements in the
+	 *         hierarchy, and the each value is a set of the direct children of
+	 *         the associate parent, or an empty map if the hierarchy is empty.
+	 */
+	@Override
+	public Map<FatCat, Set<Capitalist>> getHierarchy() {
+		return baseMap;
+	}
+
+	/**
+	 * @param capitalist
+	 * @return the parent chain of the given element, starting with its direct
+	 *         parent, then its parent's parent, etc, or an empty list if the
+	 *         given element has no parent or if its parent is not in the
+	 *         hierarchy
+	 */
+	@Override
+	public List<FatCat> getParentChain(Capitalist capitalist) {
+		List<FatCat> lParentList = new LinkedList<>();
+		if (!(this.getElements().contains(capitalist))) {
+			// do nothing
+		} else {
+			lParentList = nextCapitalistPig(capitalist);
+		}
+//		FatCat parent = capitalist.getParent();
+//        while (parent != null) {
+//            lParentList.add(parent);
+//            parent = parent.getParent();
+//        }
+		return lParentList;
+	}
+
+	private static LinkedList<FatCat> nextCapitalistPig(Capitalist pig) {
+		LinkedList<FatCat> piggies = new LinkedList<>();
+		if (pig.hasParent()) {
+			piggies.add(pig.getParent());
+			nextCapitalistPig(pig.getParent());
+		}
+		return piggies;
+	}
 }
