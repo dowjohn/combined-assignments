@@ -10,9 +10,11 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.util.*;
 
 public class MegaCorp implements Hierarchy<Capitalist, FatCat> {
-	private HashSet<Capitalist> mIsInHierarchy = new HashSet<>();
-	private HashMap<FatCat, Set<Capitalist>> mHierarchy = new HashMap<>();
+	private HashSet<Capitalist> mIsInHierarchy;
 	
+	public MegaCorp() {
+		this.mIsInHierarchy = new HashSet<>();
+	}
     /**
      * Adds a given element to the hierarchy.
      * <p>
@@ -34,11 +36,11 @@ public class MegaCorp implements Hierarchy<Capitalist, FatCat> {
     @Override
     public boolean add(Capitalist capitalist) {
     	boolean isAdded = false;
-    	if (capitalist == null) {
+    	if (capitalist == null || mIsInHierarchy.contains(capitalist)) {
     		isAdded = false;
     	} else if (capitalist.hasParent()) {
     		mIsInHierarchy.add(capitalist);
-    		mIsInHierarchy.add(capitalist.getParent()); 
+    		this.addNextParent(capitalist.getParent());
     		isAdded = true;
     	} else if (!(capitalist.hasParent()) && capitalist instanceof FatCat) {
     		mIsInHierarchy.add(capitalist);
@@ -46,7 +48,17 @@ public class MegaCorp implements Hierarchy<Capitalist, FatCat> {
     	}
     	return isAdded;
     }
-
+    
+    private void addNextParent(Capitalist capitalist) {
+    	if (mIsInHierarchy.contains(capitalist)) {
+    		// base case
+    	} else if (capitalist.hasParent() != true) {
+    		mIsInHierarchy.add(capitalist);
+    	} else {
+    		mIsInHierarchy.add(capitalist);
+    		this.addNextParent(capitalist.getParent());
+    	}
+    }
     /**
      * @param capitalist the element to search for
      * @return true if the element has been added to the hierarchy, false otherwise
@@ -136,21 +148,14 @@ public class MegaCorp implements Hierarchy<Capitalist, FatCat> {
      */
     @Override
     public List<FatCat> getParentChain(Capitalist capitalist) {
-    	LinkedList<FatCat> lParentList = new LinkedList<>();
-    	if (!(mIsInHierarchy.contains(capitalist))) {
-    		// do nothing
-    	} else {
-    		lParentList = nextCapitalistPig(capitalist);
+    	List<FatCat> lParentList = new LinkedList<>();
+    	if (capitalist.hasParent()) {
+    		FatCat lParent = (FatCat) capitalist.getParent();
+        	while (capitalist.hasParent()) {
+        		lParentList.add(lParent);
+        		lParent = lParent.getParent();
+        	}
     	}
-    	return lParentList;
-    }
-    
-    private static LinkedList<FatCat> nextCapitalistPig(Capitalist pig) {
-    	LinkedList<FatCat> piggies = new LinkedList<>();
-    	if (pig.hasParent()) {
-    		piggies.add(pig.getParent());
-    		nextCapitalistPig(pig.getParent());
-    	}
-    	return piggies;
+       	return lParentList;
     }
 }
