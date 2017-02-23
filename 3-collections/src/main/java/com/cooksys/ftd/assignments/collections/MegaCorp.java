@@ -151,8 +151,4 @@ public class MegaCorp implements Hierarchy<Capitalist, FatCat> {
         }
         return parents;
     }
-    public static void main(String[] args) {
-    	MegaCorp corp = new MegaCorp();
-    	List<FatCat> actual = corp.getParentChain(null);
-    }
 }
