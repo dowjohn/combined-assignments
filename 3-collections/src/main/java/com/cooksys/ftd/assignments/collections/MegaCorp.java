@@ -98,7 +98,7 @@ public class MegaCorp implements Hierarchy<Capitalist, FatCat> {
     public Set<Capitalist> getChildren(FatCat fatCat) {
     	Set<Capitalist> cattySet = new HashSet<>();
     	for (Capitalist capitalist : mIsInHierarchy) {
-    		if (capitalist.getParent().equals(fatCat)) {
+    		if (capitalist.getParent() == fatCat) {
     			cattySet.add(capitalist);
     		}
     	}
@@ -149,14 +149,5 @@ public class MegaCorp implements Hierarchy<Capitalist, FatCat> {
         	}
     	}
        	return lParentList;
-    }
-    public static void main(String[] args) {
-    	MegaCorp mega = new MegaCorp();
-    	FatCat x = new FatCat("timmy", 12, null);
-    	mega.add(x);
-    	mega.add(new FatCat("jill", 14, x));
-    	for (Capitalist fatty : mega.getParents()) {
-    		System.out.println(fatty.getName());
-    	}
     }
 }
