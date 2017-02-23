@@ -140,14 +140,15 @@ public class MegaCorp implements Hierarchy<Capitalist, FatCat> {
      */
     @Override
     public List<FatCat> getParentChain(Capitalist capitalist) {
-    	List<FatCat> lParentList = new LinkedList<>();
-    	if (capitalist.hasParent()) {
-    		FatCat lParent = (FatCat) capitalist.getParent();
-        	while (capitalist.hasParent()) {
-        		lParentList.add(lParent);
-        		lParent = lParent.getParent();
-        	}
+    	FatCat lParent = capitalist.getParent();
+    	List<FatCat> lParents = new ArrayList<>();
+    	if (capitalist.getParent() == null) {
+    		return lParents;
     	}
-       	return lParentList;
+        while (lParent != null) {
+            lParents.add(lParent);
+            lParent = lParent.getParent();
+        }
+        return lParents;
     }
 }
