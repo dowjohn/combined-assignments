@@ -8,13 +8,11 @@ import com.cooksys.ftd.assignments.collections.model.WageSlave;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class MegaCorp implements Hierarchy<Capitalist, FatCat> {
-	private HashSet<Capitalist> mIsInHierarchy;
+	private HashSet<Capitalist> mIsInHierarchy = new HashSet<>();
 	
-	public MegaCorp() {
-		this.mIsInHierarchy = new HashSet<>();
-	}
     /**
      * Adds a given element to the hierarchy.
      * <p>
@@ -77,13 +75,8 @@ public class MegaCorp implements Hierarchy<Capitalist, FatCat> {
      */
     @Override
     public Set<FatCat> getParents() {
-    	Set<FatCat> parents = new HashSet<>();
-        for (Capitalist capitalist : mIsInHierarchy) {
-        	if (capitalist instanceof FatCat) {
-        		parents.add((FatCat) capitalist);
-        	}
-        }
-        return parents;
+        Set<FatCat> parentals = (Set<FatCat>)(Set<?>) mIsInHierarchy.stream().filter(capitalist -> capitalist instanceof FatCat).collect(Collectors.toSet());
+        return parentals;
     }
 
     /**
@@ -94,14 +87,7 @@ public class MegaCorp implements Hierarchy<Capitalist, FatCat> {
      */
     @Override
     public Set<Capitalist> getChildren(FatCat fatCat) {
-    	Set<Capitalist> capitalistSet = new HashSet<>();
-    	for (Capitalist capitalist : mIsInHierarchy) {
-    		if (capitalist.getParent() == fatCat) {
-    			capitalistSet.add(capitalist);
-    		}
-    	}
-    	Set<Capitalist> testSet = new HashSet<>(capitalistSet);
-    	
+    	Set<Capitalist> testSet = mIsInHierarchy.stream().filter(capitalist -> capitalist.getParent() == fatCat).collect(Collectors.toSet());
         return testSet;
     }
 
@@ -116,14 +102,14 @@ public class MegaCorp implements Hierarchy<Capitalist, FatCat> {
     	if (mIsInHierarchy.isEmpty()) {
     		mapOut.isEmpty();
     	} else {
-	    	for (Capitalist cat : mIsInHierarchy) {
-	    		if (cat instanceof FatCat) {
-	    			mapOut.put((FatCat) cat, new HashSet<Capitalist>());
+	    	for (Capitalist capitalist : mIsInHierarchy) {
+	    		if (capitalist instanceof FatCat) {
+	    			mapOut.put((FatCat) capitalist, new HashSet<Capitalist>());
 	    		}
 	    	}
-	    	for (Capitalist cat : mIsInHierarchy) {
-	    		if (cat.hasParent()) {
-	    			mapOut.get(cat.getParent()).add(cat);
+	    	for (Capitalist capitalist : mIsInHierarchy) {
+	    		if (capitalist.hasParent()) {
+	    			mapOut.get(capitalist.getParent()).add(capitalist);
 	    		}
 	    	}
     	}
