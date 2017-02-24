@@ -8,8 +8,10 @@ import com.cooksys.ftd.assignments.collections.model.WageSlave;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class MegaCorp implements Hierarchy<Capitalist, FatCat> {
+<<<<<<< HEAD
 	private Map<FatCat, Set<Capitalist>> baseMap;
 
 	public MegaCorp() {
@@ -17,6 +19,11 @@ public class MegaCorp implements Hierarchy<Capitalist, FatCat> {
 	}
 
 	/**
+=======
+	private HashSet<Capitalist> mIsInHierarchy = new HashSet<>();
+	
+    /**
+>>>>>>> assignment_3
      * Adds a given element to the hierarchy.
      * <p>
      * If the given element is already present in the hierarchy,
@@ -36,6 +43,7 @@ public class MegaCorp implements Hierarchy<Capitalist, FatCat> {
      */
     @Override
     public boolean add(Capitalist capitalist) {
+<<<<<<< HEAD
     	boolean isAdded = false;
     	if (capitalist == null || this.has(capitalist) || capitalist.getParent() == null && capitalist instanceof WageSlave) {
     		isAdded = false;
@@ -163,4 +171,110 @@ public class MegaCorp implements Hierarchy<Capitalist, FatCat> {
 		}
 		return piggies;
 	}
+=======
+    	if (capitalist == null || this.has(capitalist) || capitalist.hasParent() == false && capitalist instanceof WageSlave) {
+    		return false;
+    	} else if (capitalist.hasParent() != true && capitalist instanceof FatCat) {
+    		mIsInHierarchy.add(capitalist); 
+    		return true;
+    	} else {
+    		mIsInHierarchy.add(capitalist);
+    		this.add(capitalist.getParent());
+    		return true;
+    	}
+    }
+
+    /**
+     * @param capitalist the element to search for
+     * @return true if the element has been added to the hierarchy, false otherwise
+     */
+    @Override
+    public boolean has(Capitalist capitalist) {
+    	boolean doesHave = false;
+    	if (mIsInHierarchy.contains(capitalist)) {
+    		doesHave = true;
+    	}
+    	return doesHave;
+    }
+
+    /**
+     * @return all elements in the hierarchy,
+     * or an empty set if no elements have been added to the hierarchy
+     */
+    @Override
+    public Set<Capitalist> getElements() {
+    	Set<Capitalist> capitalists = new HashSet<>();
+    	capitalists.addAll(mIsInHierarchy);
+        return capitalists;
+    }
+
+    /**
+     * @return all parent elements in the hierarchy,
+     * or an empty set if no parents have been added to the hierarchy
+     */
+    @Override
+    public Set<FatCat> getParents() {
+        Set<FatCat> parentals = (Set<FatCat>)(Set<?>) mIsInHierarchy.stream().filter(capitalist -> capitalist instanceof FatCat).collect(Collectors.toSet());
+        return parentals;
+    }
+
+    /**
+     * @param fatCat the parent whose children need to be returned
+     * @return all elements in the hierarchy that have the given parent as a direct parent,
+     * or an empty set if the parent is not present in the hierarchy or if there are no children
+     * for the given parent
+     */
+    @Override
+    public Set<Capitalist> getChildren(FatCat fatCat) {
+    	Set<Capitalist> testSet = mIsInHierarchy.stream().filter(capitalist -> capitalist.getParent() == fatCat).collect(Collectors.toSet());
+        return testSet;
+    }
+
+    /**
+     * @return a map in which the keys represent the parent elements in the hierarchy,
+     * and the each value is a set of the direct children of the associate parent, or an
+     * empty map if the hierarchy is empty.
+     */
+    @Override
+    public Map<FatCat, Set<Capitalist>> getHierarchy() {
+    	Map<FatCat, Set<Capitalist>> mapOut = new HashMap<>();
+    	if (mIsInHierarchy.isEmpty()) {
+    		mapOut.isEmpty();
+    	} else {
+	    	for (Capitalist capitalist : mIsInHierarchy) {
+	    		if (capitalist instanceof FatCat) {
+	    			mapOut.put((FatCat) capitalist, new HashSet<Capitalist>());
+	    		}
+	    	}
+	    	for (Capitalist capitalist : mIsInHierarchy) {
+	    		if (capitalist.hasParent()) {
+	    			mapOut.get(capitalist.getParent()).add(capitalist);
+	    		}
+	    	}
+    	}
+        return mapOut;
+    }
+
+    /**
+     * @param capitalist
+     * @return the parent chain of the given element, starting with its direct parent,
+     * then its parent's parent, etc, or an empty list if the given element has no parent
+     * or if its parent is not in the hierarchy
+     */
+    @Override
+    public List<FatCat> getParentChain(Capitalist capitalist) {
+    	List<FatCat> parents = new ArrayList<>();
+    	
+    	if (capitalist == null || capitalist.hasParent() == false || !(mIsInHierarchy.contains(capitalist.getParent()))) {
+    		return parents;
+    	}
+    	
+    	FatCat parent = capitalist.getParent();
+        while (parent != null) {
+            parents.add(parent);
+            parent = parent.getParent();
+        }
+        return parents;
+    }
+>>>>>>> assignment_3
 }
