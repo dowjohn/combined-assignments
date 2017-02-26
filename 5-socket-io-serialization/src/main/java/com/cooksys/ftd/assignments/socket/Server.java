@@ -1,8 +1,13 @@
 package com.cooksys.ftd.assignments.socket;
 
+import com.cooksys.ftd.assignments.socket.model.Config;
 import com.cooksys.ftd.assignments.socket.model.Student;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
 
 public class Server extends Utils {
 
@@ -14,7 +19,65 @@ public class Server extends Utils {
      * @return a {@link Student} object unmarshalled from the given file path
      */
     public static Student loadStudent(String studentFilePath, JAXBContext jaxb) {
-        return null; // TODO
+        Student student;
+        try {
+            File file = new File(studentFilePath);
+            JAXBContext context = JAXBContext.newInstance(Config.class);
+            Unmarshaller unmarshaller = context.createUnmarshaller();
+            student =(Student) unmarshaller.unmarshal(file);
+            return student;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static void listenAndSend() {
+        Config config = Utils.loadConfig("5-socket-io-serialization/config/config.xml", Utils.createJAXBContext());
+        Thread openSocket = new Thread(() -> {
+            FileInputStream fileInputStream = null;
+            BufferedInputStream bufferedInputStream = null;
+            OutputStream outputStream = null;
+            ServerSocket serverSocket = null;
+            Socket connectionSocket = null;
+
+            while(true) {
+                try {
+                    serverSocket = new ServerSocket(config.getLocal().getPort());
+                    connectionSocket = serverSocket.accept();
+                    System.out.println("Socket Established");
+                    outputStream = new BufferedOutputStream(connectionSocket.getOutputStream());
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if (outputStream != null) {
+                    try {
+                        System.out.println("outputstream is not null");
+                        File file = new File(config.getStudentFilePath());
+                        byte[] fileBytes = new byte[(int) file.length()];
+                        fileInputStream = new FileInputStream(file);
+                        bufferedInputStream = new BufferedInputStream(fileInputStream);
+                        bufferedInputStream.read(fileBytes,0, fileBytes.length);
+                        outputStream = connectionSocket.getOutputStream();
+                        System.out.println("its doin somthing");
+                        outputStream.write(fileBytes, 0, fileBytes.length);
+                        outputStream.flush();
+                        outputStream.close();
+                        connectionSocket.close();
+                        System.out.println("k it closed i gues");
+                        //file sent
+                        return;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        System.out.println("error caught");
+                    } finally {
+                       //idk
+                    }
+                }
+            }
+        });
+        openSocket.start();
     }
 
     /**
@@ -30,6 +93,8 @@ public class Server extends Utils {
      * Following this transaction, the server may shut down or listen for more connections.
      */
     public static void main(String[] args) {
-        // TODO
+        System.out.println("Begin transfer...server");
+        listenAndSend();
+
     }
 }
