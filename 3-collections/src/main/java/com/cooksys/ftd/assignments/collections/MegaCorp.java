@@ -5,8 +5,6 @@ import com.cooksys.ftd.assignments.collections.model.Capitalist;
 import com.cooksys.ftd.assignments.collections.model.FatCat;
 import com.cooksys.ftd.assignments.collections.model.WageSlave;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
