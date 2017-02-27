@@ -2,6 +2,9 @@ package com.cooksys.ftd.assignments.concurrency.model.config;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.*;
 import java.nio.file.Path;
 import java.util.List;
@@ -9,6 +12,9 @@ import java.util.List;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Config {
+    private Config config;
+    private ServerConfig server;
+    private ClientConfig client;
 
     /**
      * Loads a {@link Config} object from the given xml file path
@@ -17,18 +23,24 @@ public class Config {
      * @return the unmarshalled {@link Config} object
      */
     public static Config load(Path path) {
-        throw new NotImplementedException();
+        Config config = null;
+        try {
+            JAXBContext context = JAXBContext.newInstance(Config.class);
+            Unmarshaller unmarshaller = context.createUnmarshaller();
+            config = (Config) unmarshaller.unmarshal(path.toFile());
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
+        return config;
     }
-
-    /**
-     * server configuration
-     */
-    private ServerConfig server;
-
-    /**
-     * client configuration
-     */
-    private ClientConfig client;
+    public Config() {
+        //default constructor;
+    }
+    public Config (Path path) {
+        this.config = load(path);
+        this.server = config.getServer();
+        this.client = config.getClient();
+    }
 
     public ServerConfig getServer() {
         return server;

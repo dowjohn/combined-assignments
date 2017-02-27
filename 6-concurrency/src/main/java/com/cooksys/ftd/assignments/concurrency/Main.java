@@ -1,6 +1,10 @@
 package com.cooksys.ftd.assignments.concurrency;
 
+import com.cooksys.ftd.assignments.concurrency.model.config.Config;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
+import java.net.URI;
+import java.nio.file.Paths;
 
 public class Main {
 
@@ -15,6 +19,11 @@ public class Main {
      * is not disabled, create a {@link Client} object with the client config ans spin off a thread to run it.
      */
     public static void main(String[] args) {
-       throw new NotImplementedException();
+       Config config = new Config(Paths.get("6-concurrency", "config", "config.xml"));
+       Thread serverThread;
+       if (config.getServer().isDisabled() == false) {
+           Server server = new Server(config.getServer());
+           serverThread = new Thread(server);
+       }
     }
 }
