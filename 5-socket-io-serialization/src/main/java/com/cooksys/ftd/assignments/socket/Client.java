@@ -41,7 +41,7 @@ public class Client {
             student.setFavoriteParadigm("Functional");
             student.setFirstName("John");
             student.setLastName("Dow");
-            File file = new File("5-socket-io-serialization/config/student.xml");
+            File file = new File("./config/student.xml");
             JAXBContext context = JAXBContext.newInstance(Student.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
@@ -55,10 +55,10 @@ public class Client {
         int bytesRead;
         int current = 0;
 
-        Config config = Utils.loadConfig("5-socket-io-serialization/config/config.xml", Utils.createJAXBContext());
+        Config config = Utils.loadConfig("./config/config.xml", Utils.createJAXBContext());
         String serverIP = config.getRemote().getHost();
         int serverPort = config.getRemote().getPort();
-        File newFile = new File("5-socket-io-serialization/config/new-student.xml");
+        File newFile = new File("./config/new-student.xml");
 
         Socket clientSocket = null;
         InputStream inputStream = null;
@@ -105,7 +105,7 @@ public class Client {
     public static void main(String[] args) {
         System.out.println("Begin transfer...client");
         requestAndReceiveData();
-        Student student = Utils.readStudent(new File("5-socket-io-serialization/config/new-student.xml"), Utils.createJAXBContext());
+        Student student = Utils.readStudent(new File("config/new-student.xml"), Utils.createJAXBContext());
         System.out.println(student.toString());
     }
 }

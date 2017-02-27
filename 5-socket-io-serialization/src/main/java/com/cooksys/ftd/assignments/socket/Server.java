@@ -33,7 +33,7 @@ public class Server extends Utils {
     }
 
     private static void listenAndSend() {
-        Config config = Utils.loadConfig("5-socket-io-serialization/config/config.xml", Utils.createJAXBContext());
+        Config config = Utils.loadConfig("./config/config.xml", Utils.createJAXBContext());
         Thread openSocket = new Thread(() -> {
             FileInputStream fileInputStream = null;
             BufferedInputStream bufferedInputStream = null;
@@ -42,6 +42,7 @@ public class Server extends Utils {
             Socket connectionSocket = null;
 
             while(true) {
+            	System.out.println("test");
                 try {
                     serverSocket = new ServerSocket(config.getLocal().getPort());
                     connectionSocket = serverSocket.accept();
