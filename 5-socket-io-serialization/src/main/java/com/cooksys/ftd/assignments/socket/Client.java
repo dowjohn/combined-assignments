@@ -31,7 +31,8 @@ public class Client {
             e.printStackTrace();
         }
     }
-
+    
+    // helper method for creating a student
     private static void writeToStudent() {
         try {
             Student student = new Student();
@@ -83,14 +84,13 @@ public class Client {
 
             bufferedOutputStream.write(mybytearray, 0 , current);
             bufferedOutputStream.flush();
-            System.out.println("File "
-                    + " downloaded (" + current + " bytes read)");
+            System.out.println(current + "bytes read)");
             bufferedOutputStream.close();
             clientSocket.close();
-        } catch (IOException ex) {
-            // Do exception handling
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("The download has failed");
         }
-
     }
 
     /**
