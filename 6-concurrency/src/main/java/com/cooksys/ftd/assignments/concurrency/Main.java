@@ -1,9 +1,7 @@
 package com.cooksys.ftd.assignments.concurrency;
 
 import com.cooksys.ftd.assignments.concurrency.model.config.Config;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.net.URI;
 import java.nio.file.Paths;
 
 public class Main {
@@ -24,6 +22,7 @@ public class Main {
        if (config.getServer().isDisabled() == false) {
            Server server = new Server(config.getServer());
            serverThread = new Thread(server);
+           serverThread.start();
        }
     }
 }

@@ -2,6 +2,7 @@ package com.cooksys.ftd.assignments.concurrency;
 
 import com.cooksys.ftd.assignments.concurrency.model.config.ServerConfig;
 
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -15,11 +16,21 @@ public class Server implements Runnable {
     @Override
     public void run() {
         try {
-            ServerSocket serverSocket = new ServerSocket(config.getPort());
-            Socket openSocket = serverSocket.accept();
-        } catch (Exception e) {
+            while (true) {
+                ServerSocket serverSocket = new ServerSocket(config.getPort());
+
+                Socket openSocket = serverSocket.accept();
+                while (true) {
+                    System.out.println("Created client: " + openSocket );
+
+                    ClientHandler clientHandler = new ClientHandler(openSocket);
+                    Thread clientHandlerThread = new Thread(clientHandler);
+
+                    clientHandlerThread.start();
+                }
+            }
+        } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("server failed");
         }
     }
 
